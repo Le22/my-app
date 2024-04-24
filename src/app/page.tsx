@@ -1,12 +1,13 @@
+import Header from "@/components/generic/Header";
 import CardEvent from "@/components/specific/event/CardEvent";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <main>
-      <div className="flex min-h-screen flex-col items-center justify-between p-10">
-        <div></div>
+      <div className="flex min-h-screen flex-col items-center justify-between px-10">
+        <Header />
         <Image
           src="/assets/paris-2024-logo.svg"
           alt="Paris 2024 Logo"
