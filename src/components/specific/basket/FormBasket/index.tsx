@@ -15,33 +15,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-const passwordValidation = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
-);
-
-const formSchema = z.object({
-  username: z.string().min(1, { message: "Le nom d'utilisateur est requis" }),
-  email: z.string().email({ message: "Entrez une adresse email valide" }),
-  password: z
-    .string()
-    .min(1, { message: "Le mot de passe est requis" })
-    .regex(passwordValidation, {
-      message:
-        "Le mot de passe doit contenir au moins 8 caractères et une majuscule, une minuscule, un chiffre et un caractère speciaux",
-    }),
-});
+import { userFormSchema } from "@/lib/zod";
+import { signIn } from "next-auth/react";
 
 export function FormBasket() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const pass = localStorage.getItem("pass");
+
+  const form = useForm<z.infer<typeof userFormSchema>>({
+    resolver: zodResolver(userFormSchema),
     defaultValues: {
       username: "",
+      email: "",
+      password: "",
+      pass: pass!,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  function onSubmit(values: z.infer<typeof userFormSchema>) {
+    signIn("credentials", values, {
+      callbackUrl: "/payment",
+    });
   }
 
   return (

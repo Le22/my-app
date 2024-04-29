@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/generic/Footer";
 import { Toaster } from "sonner";
+import MyClientQueryClientProvider from "@/provider/MyClientQueryClientProvider";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,9 +27,13 @@ export default function RootLayout({
           inter.className
         )}
       >
-        {children}
-        <Footer />
-        <Toaster />
+        <SessionProvider>
+          <MyClientQueryClientProvider>
+            {children}
+            <Footer />
+            <Toaster />
+          </MyClientQueryClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );
