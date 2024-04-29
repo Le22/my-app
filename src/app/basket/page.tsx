@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const BasketPage = () => {
   const router = useRouter();
 
-  const passId = localStorage.getItem("pass");
+  const passId = typeof window !== "undefined" && localStorage.getItem("pass");
 
   const pass = useQuery({
     queryKey: ["pass", passId],

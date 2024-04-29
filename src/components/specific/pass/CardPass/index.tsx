@@ -14,7 +14,8 @@ const CardPass = ({ id, title }: Props) => {
 
   const handleSelectPass = useCallback(
     (pass: string) => {
-      localStorage.setItem("pass", pass.toString());
+      typeof window !== "undefined" &&
+        localStorage.setItem("pass", pass.toString());
       toast.success("Le pass a été ajouté au panier", {
         action: {
           label: "Voir le panier",

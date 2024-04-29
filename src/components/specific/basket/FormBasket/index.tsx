@@ -19,7 +19,8 @@ import { userFormSchema } from "@/lib/zod";
 import { signIn } from "next-auth/react";
 
 export function FormBasket() {
-  const pass = localStorage.getItem("pass");
+  const pass =
+    typeof window !== "undefined" ? localStorage.getItem("pass") : undefined;
 
   const form = useForm<z.infer<typeof userFormSchema>>({
     resolver: zodResolver(userFormSchema),

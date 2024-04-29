@@ -9,7 +9,7 @@ import { useMemo } from "react";
 
 const Header = () => {
   const pass = useMemo(() => {
-    return localStorage.getItem("pass");
+    return typeof window !== "undefined" && localStorage.getItem("pass");
   }, []);
 
   const session = useSession();
