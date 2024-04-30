@@ -1,4 +1,4 @@
-import { hashPassword } from "@/lib/password";
+import { hashPassword } from "../src/lib/password";
 import prisma from "../src/lib/prisma";
 import { RoleEnum } from "@prisma/client";
 
