@@ -1,12 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { ZodError } from "zod";
-import { userFormSchema } from "./lib/zod";
 import prisma from "./lib/prisma";
 import { RoleEnum } from "@prisma/client";
-import bcrypt from "bcrypt";
 import { newUser } from "./service/user/newUser";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { hashPassword, isSamePassword } from "./lib/password";
 
 declare module "next-auth" {
   interface User {
@@ -26,46 +24,50 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: {},
-        password: {},
-        userName: {},
-        pass: {},
+        email: {
+          label: "Email ou nom d'utilisateur",
+        },
+        password: {
+          label: "Mot de passe",
+          type: "password",
+        },
       },
-      async authorize(credentials) {
-        try {
-          let user = null;
+      async authorize(credentials, req) {
+        let user = null;
 
-          const { email, password, username, pass } =
-            await userFormSchema.parseAsync(credentials);
+        const params = new URL(req.url).searchParams;
 
-          const pwHash = await bcrypt.hash(password, 10);
+        const username = params.get("userName")!;
+        const pass = params.get("pass")!;
 
-          user = await prisma.user.findUnique({
-            where: {
-              email,
-            },
-          });
+        const { email, password }: any = credentials;
 
-          if (!user) {
-            return await newUser({ email, password, username, pass, pwHash });
-          }
+        console.log(password);
 
-          if (pwHash !== user.password) {
-            return null;
-          }
+        const pwHash = await hashPassword(password);
 
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-          };
-        } catch (error) {
-          if (error instanceof ZodError) {
-            return null;
-          }
+        user = await prisma.user.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (!user) {
+          return await newUser({ email, password, username, pass, pwHash });
+        }
+
+        const samePassword = await isSamePassword(password, user.password);
+
+        if (!samePassword) {
           return null;
         }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],

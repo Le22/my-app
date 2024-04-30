@@ -17,8 +17,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { userFormSchema } from "@/lib/zod";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function FormBasket() {
+  const router = useRouter();
+
   const pass =
     typeof window !== "undefined" ? localStorage.getItem("pass") : undefined;
 
@@ -33,8 +36,15 @@ export function FormBasket() {
   });
 
   function onSubmit(values: z.infer<typeof userFormSchema>) {
-    signIn("credentials", values, {
-      callbackUrl: "/payment",
+    signIn(
+      "credentials",
+      { email: values.email, password: values.password },
+      {
+        userName: values.username,
+        pass: values.pass,
+      }
+    ).then(() => {
+      router.push("/payment");
     });
   }
 

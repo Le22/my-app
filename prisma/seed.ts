@@ -1,14 +1,19 @@
+import { hashPassword } from "@/lib/password";
 import prisma from "../src/lib/prisma";
 import { RoleEnum } from "@prisma/client";
 
 async function main() {
+  const adminPassword = "#admin-paris-2024-mdp#";
+
+  const hash = await hashPassword(adminPassword);
+
   await prisma.user.upsert({
     where: { email: "admin-paris-2024" },
     update: {},
     create: {
       name: "admin-paris-2024",
       email: "admin-paris-2024",
-      password: "#admin-paris-2024-mdp#",
+      password: hash,
       key: "",
       role: RoleEnum.Admin,
     },

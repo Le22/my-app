@@ -10,6 +10,8 @@ const PaymentPage = () => {
   const router = useRouter();
   const session = useSession();
 
+  console.log(session);
+
   const updateTicket = useMutation({
     mutationKey: ["ticket"],
     mutationFn: ({ userId }: { userId: string }) =>
@@ -37,7 +39,7 @@ const PaymentPage = () => {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-10 p-24">
-      <h1 className="text-5xl font-bold">Payement</h1>
+      <h1 className="text-5xl font-bold">Paiement</h1>
       <Button onClick={handleClick}>Activer votre pass</Button>
     </main>
   );

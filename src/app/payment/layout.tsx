@@ -1,4 +1,5 @@
-import { auth } from "@/auth";
+import { auth, signIn } from "@/auth";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   children: React.ReactNode;
@@ -7,7 +8,19 @@ interface Props {
 export default async function PaymentLayout({ children }: Props) {
   const session = await auth();
 
-  if (!session?.user) return null;
+  if (!session?.user)
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center px-10">
+        <form
+          action={async () => {
+            "use server";
+            await signIn();
+          }}
+        >
+          <Button type="submit">Se connecter</Button>
+        </form>
+      </div>
+    );
   console.log(session);
   return children;
 }

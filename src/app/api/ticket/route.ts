@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -13,12 +14,14 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  try {
-    const { userId } = await request.json();
+  const session = await auth();
 
+  if (!session?.user) return null;
+
+  try {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: session.user.id,
       },
       select: {
         key: true,

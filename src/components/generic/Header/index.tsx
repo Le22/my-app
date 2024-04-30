@@ -53,8 +53,10 @@ const Header = () => {
           </Button>
         </div>
       ) : (
-        <div>
-          <Button onClick={() => signOut()}>logout</Button>
+        <div className="flex gap-4 items-center">
+          <Button variant={"secondary"} onClick={() => signOut()}>
+            Déconnexion
+          </Button>
           <Button
             variant={"outline"}
             size={"icon"}

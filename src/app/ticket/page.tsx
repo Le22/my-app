@@ -8,32 +8,30 @@ import { QRCodeSVG } from "qrcode.react";
 const TicketPage = () => {
   const session = useSession();
 
-  const userId = session.data?.user?.id!;
-
   const ticket = useQuery({
     queryKey: ["ticket"],
     queryFn: () => fetch(`api/ticket/${userId}`).then((res) => res.json()),
   });
 
+  if (!session.data?.user) return null;
+
+  const userId = session.data?.user?.id!;
+
+  ticket.refetch();
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start gap-20 px-10">
       <Header />
-      <h1 className="text-5xl font-bold">Votre ticket</h1>
+      <h1 className="text-5xl font-bold">
+        {session.data?.user?.name} voici votre ticket
+      </h1>
       <QRCodeSVG
         value={ticket.data?.publicKey ?? ""}
         size={260}
         bgColor={"#ffffff"}
-        fgColor={"#000000"}
-        level={"L"}
+        fgColor={"#333333"}
+        level={"Q"}
         includeMargin={false}
-        imageSettings={{
-          src: "/assets/paris-2024-logo.svg",
-          x: undefined,
-          y: undefined,
-          height: 64,
-          width: 64,
-          excavate: true,
-        }}
       />
     </main>
   );
