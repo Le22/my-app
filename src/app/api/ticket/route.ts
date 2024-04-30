@@ -16,7 +16,7 @@ export async function GET() {
 export async function PUT(request: Request) {
   const session = await auth();
 
-  if (!session?.user) return null;
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" });
 
   try {
     const user = await prisma.user.findUnique({

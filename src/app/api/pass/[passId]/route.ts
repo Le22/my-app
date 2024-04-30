@@ -10,8 +10,24 @@ export async function PUT(
 ) {
   const session = await auth();
 
-  if (!session?.user?.role) return null;
-  if (session?.user?.role !== RoleEnum.Admin) return null;
+  if (!session?.user?.role)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  if (session?.user?.role !== RoleEnum.Admin)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
 
   try {
     const { title } = await passFormSchema.parseAsync(await request.json());
