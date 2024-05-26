@@ -87,7 +87,7 @@ export function FormBasket() {
             <FormItem>
               <FormLabel>Mot de passe</FormLabel>
               <FormControl>
-                <Input placeholder="********" {...field} />
+                <Input type="password" placeholder="********" {...field} />
               </FormControl>
               <FormDescription>
                 Le mot de passe doit contenir au moins 8 caractères et une
