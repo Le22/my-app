@@ -63,3 +63,47 @@ export async function GET(
 
   return NextResponse.json(pass);
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { passId: string } }
+) {
+  const session = await auth();
+
+  if (!session?.user?.role)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  if (session?.user?.role !== RoleEnum.Admin)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+
+  try {
+    await prisma.ticket.deleteMany({
+      where: {
+        passId: params.passId,
+      },
+    });
+
+    await prisma.pass.delete({
+      where: {
+        id: params.passId,
+      },
+    });
+
+    return NextResponse.json({});
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}

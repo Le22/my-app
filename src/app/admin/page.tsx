@@ -13,6 +13,17 @@ import {
 import { FormPass } from "@/components/specific/pass/FormPass";
 import { passFormSchema } from "@/lib/zod";
 import { z } from "zod";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const AdminPage = () => {
   const router = useRouter();
@@ -46,6 +57,20 @@ const AdminPage = () => {
       fetch(`api/pass/${id}`, {
         method: "PUT",
         body: JSON.stringify({ title }),
+      }),
+    onSuccess: (data) => {
+      queryClient.refetchQueries({
+        queryKey: ["pass"],
+      });
+      return data;
+    },
+  });
+
+  const deletePass = useMutation({
+    mutationKey: ["pass"],
+    mutationFn: ({ id }: { id?: string }) =>
+      fetch(`api/pass/${id}`, {
+        method: "DELETE",
       }),
     onSuccess: (data) => {
       queryClient.refetchQueries({
@@ -122,6 +147,32 @@ const AdminPage = () => {
                   />
                 </DialogContent>
               </Dialog>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant={"destructive"} size={"sm"}>
+                    Supprimer
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Voulez vous supprimer ce pass ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Cette action est définitive. La suppression de ce pass
+                      entrainera la suppression de tout les tickets associés.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => deletePass.mutate({ id: pass.id })}
+                    >
+                      Supprimer
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         ))}
