@@ -1,5 +1,7 @@
 import { auth, signIn } from "@/auth";
 import { Button } from "@/components/ui/button";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
@@ -21,6 +23,17 @@ export default async function PaymentLayout({ children }: Props) {
         </form>
       </div>
     );
-  console.log(session);
+
+  const ticket = await prisma.ticket.findUnique({
+    where: {
+      userId: session?.user?.id!,
+    },
+    select: {
+      publicKey: true,
+    },
+  });
+
+  if (ticket?.publicKey) return redirect("/ticket");
+
   return children;
 }

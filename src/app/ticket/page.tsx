@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/generic/Header";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { QRCodeSVG } from "qrcode.react";
@@ -25,14 +26,18 @@ const TicketPage = () => {
       <h1 className="text-5xl font-bold">
         {session.data?.user?.name} voici votre ticket
       </h1>
-      <QRCodeSVG
-        value={ticket.data?.publicKey ?? ""}
-        size={260}
-        bgColor={"#ffffff"}
-        fgColor={"#333333"}
-        level={"Q"}
-        includeMargin={false}
-      />
+      {ticket.isLoading ? (
+        <Skeleton className="w-[260px] h-[260px]" />
+      ) : (
+        <QRCodeSVG
+          value={ticket.data?.publicKey ?? ""}
+          size={260}
+          bgColor={"#ffffff"}
+          fgColor={"#333333"}
+          level={"Q"}
+          includeMargin={false}
+        />
+      )}
     </main>
   );
 };

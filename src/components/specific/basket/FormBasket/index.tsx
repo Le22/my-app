@@ -38,14 +38,16 @@ export function FormBasket() {
   function onSubmit(values: z.infer<typeof userFormSchema>) {
     signIn(
       "credentials",
-      { email: values.email, password: values.password },
+      {
+        email: values.email,
+        password: values.password,
+        callbackUrl: "/payment",
+      },
       {
         userName: values.username,
         pass: values.pass,
       }
-    ).then(() => {
-      router.push("/payment");
-    });
+    );
   }
 
   return (
