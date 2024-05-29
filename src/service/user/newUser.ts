@@ -7,13 +7,7 @@ interface Props extends z.infer<typeof userFormSchema> {
   pwHash: string;
 }
 
-export async function newUser({
-  email,
-  password,
-  username,
-  pass,
-  pwHash,
-}: Props) {
+export async function newUser({ email, username, pass, pwHash }: Props) {
   async function generateKey() {
     let trying = 0;
 
