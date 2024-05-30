@@ -1,8 +1,30 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { RoleEnum } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+  const session = await auth();
+
+  if (!session?.user?.role)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  if (session?.user?.role !== RoleEnum.Admin)
+    return NextResponse.json(
+      {
+        error: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+
   const tickets = await prisma.ticket.findMany({
     select: {
       id: true,
