@@ -49,7 +49,7 @@ export function FormPass({ title, id, actionText, onSubmit }: Props) {
             </FormItem>
           )}
         />
-        <DialogClose>
+        <DialogClose asChild>
           <Button type="submit">{actionText}</Button>
         </DialogClose>
       </form>
