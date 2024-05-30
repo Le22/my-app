@@ -31,12 +31,15 @@ const CardPass = ({ id, title }: Props) => {
       variant={"outline"}
       className="flex flex-col gap-4 items-stretch justify-between p-4 h-auto w-[200px]"
       onClick={() => handleSelectPass(id)}
+      asChild
     >
-      <Badge className="self-start">Pass</Badge>
-      <p className="text-xl">{title}</p>
-      <Button size={"sm"} variant={"secondary"}>
-        Choisir
-      </Button>
+      <div>
+        <Badge className="self-start">Pass</Badge>
+        <p className="text-xl">{title}</p>
+        <Button size={"sm"} variant={"secondary"}>
+          Choisir
+        </Button>
+      </div>
     </Button>
   );
 };
